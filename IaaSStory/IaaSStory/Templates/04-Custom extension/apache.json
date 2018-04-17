@@ -1,0 +1,38 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName": {
+      "type": "string",
+      "defaultValue": "WEB1",
+      "metadata": {
+        "description": "Name for the VM the extension will be applied to."
+      }
+    }
+  },
+  "variables": {
+    "location": "[resourceGroup().location]",
+    "publisher": "Microsoft.OSTCExtensions",
+    "type": "CustomScriptForLinux",
+    "typeHandlerVersion": "1.29",
+    "fileUri": "https://raw.githubusercontent.com/telmosampaio/azure-templates/master/IaaSStory/IaaSStory/Templates/04-Custom%20extension/apache.sh",
+    "commandToExecute": "sh apache.sh"
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('vmName'),'/webserver')]",
+      "location": "[variables('location')]",
+      "properties": {
+        "publisher": "[variables('publisher')]",
+        "type": "[variables('type')]",
+        "typeHandlerVersion": "[variables('typeHandlerVersion')]",
+        "settings": {
+          "fileUris": [ "[variables('fileUri')]" ],
+          "commandToExecute": "[variables('commandToExecute')]"
+        }        
+      }
+    }
+  ]
+}
